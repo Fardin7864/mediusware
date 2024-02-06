@@ -35,7 +35,8 @@ const Problem2 = () => {
     ? allContact?.filter((contact) => contact.id % 2 === 0)
     : allContact;
 
-    console.log(allContact, 'and', usContact)
+    // console.log(allContact, 'and', usContact)
+    console.log(filteredUsContact)
 
   return (
     <div className="container">
@@ -82,6 +83,7 @@ const Problem2 = () => {
                 <Table striped bordered hover responsive>
                   <thead>
                     <tr>
+                      <th>ID</th>
                       <th>Country</th>
                       <th>Phone</th>
                     </tr>
@@ -89,6 +91,7 @@ const Problem2 = () => {
                   <tbody>
                     {filteredAllContact?.map((data, index) => (
                       <tr key={index}>
+                        <td>{data.id}</td>
                         <td>{data.country.name}</td>
                         <td>{data.phone}</td>
                       </tr>
@@ -132,6 +135,7 @@ const Problem2 = () => {
                 <Table striped bordered hover responsive>
                   <thead>
                     <tr>
+                      <th>ID</th>
                       <th>Country</th>
                       <th>Phone</th>
                     </tr>
@@ -139,6 +143,7 @@ const Problem2 = () => {
                   <tbody>
                     {filteredUsContact?.map((data, index) => (
                       <tr key={index}>
+                        <td>{data.id}</td>
                         <td>{data.country.name}</td>
                         <td>{data.phone}</td>
                       </tr>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Problem1 = () => {
   const [show, setShow] = useState("all");
@@ -12,6 +12,7 @@ const Problem1 = () => {
       status: e.target.status.value.toLowerCase(),
     };
     setUsers((prevUsers) => [...prevUsers, user]);
+    e.target.reset();
   };
 
   const handleFilter = () => {
@@ -28,7 +29,7 @@ const Problem1 = () => {
   };
 
   // Initial filter when component mounts
-  React.useEffect(() => {
+  useEffect(() => {
     handleFilter();
   }, [users, show]);
 
