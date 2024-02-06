@@ -7,6 +7,8 @@ const Problem2 = () => {
   const [allContact, setallContact] = useState([]);
   const [usContact, setusContact] = useState([]);
   const [onlyEvenChecked, setOnlyEvenChecked] = useState(false);
+  const [allPage, setAllPage] = useState(1); // State to track current page for all contacts
+  const [usPage, setUsPage] = useState(1); // State to track current page for US contacts
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -14,29 +16,45 @@ const Problem2 = () => {
   const handleClose2 = () => setShow2(false);
   const handleShow2 = () => setShow2(true);
 
+  // Effect to fetch all contacts based on the current page
   useEffect(() => {
-    fetch('https://contact.mediusware.com/api/contacts/?page=1&page_size=600')
+    fetch(`https://contact.mediusware.com/api/contacts/?page=${allPage}&page_size=10`)
       .then((res) => res.json())
       .then((data) => setallContact(data.results));
-  }, []);
+  }, [allPage]);
 
+  // Effect to fetch US contacts based on the current page
   useEffect(() => {
-    fetch('https://contact.mediusware.com/api/country-contacts/United%20States/?page=1&page_size=600')
+    fetch(`https://contact.mediusware.com/api/country-contacts/United%20States/?page=${usPage}&page_size=10`)
       .then((res) => res.json())
       .then((data) => setusContact(data.results));
-  }, []);
+  }, [usPage]);
 
-  // Step 2: Update mapping logic
+  // Function to handle page change for all contacts
+  const handleAllPageChange = (direction) => {
+    if (direction === 'next') {
+      setAllPage(allPage + 1);
+    } else {
+      setAllPage(allPage - 1);
+    }
+  };
+
+  // Function to handle page change for US contacts
+  const handleUsPageChange = (direction) => {
+    if (direction === 'next') {
+      setUsPage(usPage + 1);
+    } else {
+      setUsPage(usPage - 1);
+    }
+  };
+
   const filteredUsContact = onlyEvenChecked
     ? usContact?.filter((contact) => contact.id % 2 === 0)
     : usContact;
-  // Step 2: Update mapping logic
+
   const filteredAllContact = onlyEvenChecked
     ? allContact?.filter((contact) => contact.id % 2 === 0)
     : allContact;
-
-    // console.log(allContact, 'and', usContact)
-    console.log(filteredUsContact)
 
   return (
     <div className="container">
@@ -70,7 +88,6 @@ const Problem2 = () => {
             type="checkbox"
             label="Only Even"
             style={{ marginLeft: '10px' }}
-            // Step 3: Attach event handler to update the state
             onChange={() => setOnlyEvenChecked(!onlyEvenChecked)}
             checked={onlyEvenChecked}
           />
@@ -98,18 +115,23 @@ const Problem2 = () => {
                     ))}
                   </tbody>
                 </Table>
+                <div className="d-flex justify-content-between mt-3">
+                  {/* Button for previous page, disabled if it's the first page */}
+                  <Button onClick={() => handleAllPageChange('prev')} disabled={allPage === 1}>Previous</Button>
+                  {/* Button for next page */}
+                  <Button onClick={() => handleAllPageChange('next')}>Next</Button>
+                </div>
               </Col>
             </Row>
           </Container>
         </Modal.Body>
-
       </Modal>
 
       <Modal show={show2} onHide={handleClose2}>
         <Modal.Header closeButton>
           <Modal.Title>US Contacts</Modal.Title>
         </Modal.Header>
-                <Modal.Footer>
+        <Modal.Footer>
           <Button variant="primary" onClick={() => { handleClose2(); handleShow(); }} style={{ backgroundColor: '#46139f' }}>
             All Contacts
           </Button>
@@ -150,11 +172,16 @@ const Problem2 = () => {
                     ))}
                   </tbody>
                 </Table>
+                <div className="d-flex justify-content-between mt-3">
+                  {/* Button for previous page, disabled if it's the first page */}
+                  <Button onClick={() => handleUsPageChange('prev')} disabled={usPage === 1}>Previous</Button>
+                  {/* Button for next page */}
+                  <Button onClick={() => handleUsPageChange('next')}>Next</Button>
+                </div>
               </Col>
             </Row>
           </Container>
         </Modal.Body>
-
       </Modal>
     </div>
   );
